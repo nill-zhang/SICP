@@ -73,6 +73,48 @@ if __name__ == "__main__":
    ATM_test()
    rightOperand_test()
 
+# Note: for dictionary, you don't need to use nonlocal, if you only change its keys and values
+# if you change the dictionary itself you need nonlocal
+#
+# >>> def a(b):
+# ...     def c(x):
+# ...         b["sfzhang"] += x
+# ...         return b
+# ...     return c
+# ...
+# >>>
+# >>> a({"sfzhang":"sfzhang","xlyang":"xlyang"})("xxxxxxxxx")
+# {'sfzhang': 'sfzhangxxxxxxxxx', 'xlyang': 'xlyang'}
+#
+#
+# >>> def a(b):
+# ...     def c(x):
+# ...         if x > b["sfzhang"]:
+# ...             b = x
+# ...         return b
+# ...     return c
+# ...
+# >>>
+# >>> a({"sfzhang":4,"xlyang":"xlyang"})(8)
+# Traceback (most recent call last):
+#   File "<input>", line 1, in <module>
+#     a({"sfzhang":4,"xlyang":"xlyang"})(8)
+#   File "<input>", line 3, in c
+#     if x > b["sfzhang"]:
+# UnboundLocalError: local variable 'b' referenced before assignment
+#
+#
+# >>> def a(b):
+# ...     def c(x):
+# ...         if x > b["sfzhang"]:
+# ...             b["sfzhang"] = x
+# ...         return b
+# ...     return c
+# ...
+# >>>
+# >>> a({"sfzhang":4,"xlyang":"xlyang"})(8)
+# {'sfzhang': 8, 'xlyang': 'xlyang'}
+
 
 
 
