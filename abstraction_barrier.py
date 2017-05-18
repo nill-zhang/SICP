@@ -48,8 +48,8 @@ def equal(rat1, rat2):
     return numerator(rat1) * denominator(rat2) == numerator(rat2) * denominator(rat1)
 
 
-def print_rational(num):
-    return numerator(num) + "/" + denominator(num)
+def string(rat):
+    return numerator(rat) + "/" + denominator(rat)
 
 
 def square(rat):
@@ -88,3 +88,31 @@ def rational_test():
 
 if __name__ == "__main__":
     rational_test()
+
+# we can make it more abstract instead of using tuple
+
+# def rational(nume, denom):
+#     g = gcd(nume, denom)
+#     return pair(nume//g, denom//g)
+#
+
+# def pair(x, y):
+#     def getitem(i):
+#         if i == 0:
+#             return x
+#         elif i == 1:
+#             return y
+#     return getitem
+#
+#
+# def select(f, index):
+#     return f(index)
+#
+#
+# def numerator(rat):
+#     return select(rat, 0)
+#
+#
+# def denominator(rat):
+#     return select(rat, 1)
+
