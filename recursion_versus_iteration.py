@@ -100,8 +100,51 @@ def fibonacci_test():
     print("fibonacci of 7: ", fibonacci_recur(7))
     print("fibonacci of 7: ", fibonacci_iter(7))
 
+
+def greatest_common_divisor_recur(num_a, num_b):
+    """ calculates the greatest common divisor using recursion"""
+    if num_a % num_b == 0:
+        return num_b
+    else:
+        num_a, num_b = num_b, num_a % num_b
+        return greatest_common_divisor_recur(num_a, num_b)
+
+
+def greatest_common_divisor_iter(num_a, num_b):
+    """ calculates the greatest common divisor using iteration"""
+    while num_a % num_b != 0:
+        num_a, num_b = num_b, num_a % num_b
+    return num_b
+
+
+def gcd_test():
+    print("the gcd of %d and %d is %d" % (93, 31, greatest_common_divisor_recur(93, 31)))
+    print("the gcd of %d and %d is %d" % (81, 126, greatest_common_divisor_recur(81, 126)))
+    print("the gcd of %d and %d is %d" % (93, 31, greatest_common_divisor_iter(93, 31)))
+    print("the gcd of %d and %d is %d" % (81, 126, greatest_common_divisor_iter(81, 126)))
+
+
+from math import floor, sqrt
+
+
+def prime(n):
+    """ get the all the prime numbers less than n"""
+    for i in range(2, n+1):
+        for j in range(2, floor(sqrt(i)+1)):
+            if i % j == 0:
+                break
+        else:            # enter else clause when loop terminates normally
+            yield i
+
+
+def prime_test():
+    print("prime numbers less than 30: \n", ' '.join(map(str, prime(30))))
+
+
 if __name__ == "__main__":
     sum_of_digits_test()
     is_even_test()
     factorial_test()
     fibonacci_test()
+    gcd_test()
+    prime_test()
