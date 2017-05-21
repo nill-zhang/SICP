@@ -124,11 +124,56 @@ def gcd_test():
     print("the gcd of %d and %d is %d" % (81, 126, greatest_common_divisor_iter(81, 126)))
 
 
-from math import floor, sqrt
+def base_converter_recur(num, base):
+    assert base in range(1, 17), "base should be in the range [1, 16]"
+    # I don't want mapping to be defined and used in
+    # every recursion, so I defined it in the high
+    # order function and make it visible through closure
+    # all the recursions can use it.
+    mapping = "0123456789ABCDEF"
+
+    def f():
+
+        if num // base == 0:                                   # base case, I did not use nonlocal, why?
+            yield mapping[num % base]
+        else:
+            yield from base_converter_recur(num//base, base)   # this will resolve to base case eventually
+            yield mapping[num % base]
+    return ''.join(f())                                        # concatenate the generator
+
+
+def base_converter_iter(num, base):
+
+    assert base in range(1, 17), "base should be in the range [1, 16]"
+    mapping = "0123456789ABCDEF"
+
+    def f():
+        nonlocal num                  # use the outside num
+        while num // base != 0:
+            yield mapping[num % base]
+            num = num // base
+        yield mapping[num % base]
+    return "".join(list(f())[::-1])      # reverse and then concatenate the generated list
+
+
+def base_converter_test():
+    result1 = base_converter_recur(65501, 16)
+    result2 = base_converter_iter(65501, 16)
+    result3 = base_converter_recur(248, 2)
+    result4 = base_converter_iter(248, 2)
+    result5 = base_converter_recur(23412548, 10)
+    result6 = base_converter_iter(23412548, 10)
+    print("result1: ", result1)
+    print("result2: ", result2)
+    print("result3: ", result3)
+    print("result4: ", result4)
+    print("result5: ", result5)
+    print("result6: ", result6)
 
 
 def prime(n):
     """ get the all the prime numbers less than n"""
+    from math import floor, sqrt
     for i in range(2, n+1):
         for j in range(2, floor(sqrt(i)+1)):
             if i % j == 0:
@@ -148,3 +193,4 @@ if __name__ == "__main__":
     fibonacci_test()
     gcd_test()
     prime_test()
+    base_converter_test()
