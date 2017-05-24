@@ -4,7 +4,7 @@ def linked_list(val, nex):
     return [val] + [nex]
 
 
-def isEmpty(lst):
+def is_empty(lst):
     """ returns True if it is a linked list """
     return lst == []
 
@@ -36,17 +36,18 @@ def length(lst):
     """ returns the size of the linked list"""
     assert is_linked_list(lst), "parameter is not a linked list"
     size = 0
-    while not isEmpty(lst):
+    while not is_empty(lst):
         size += 1
         lst = next(lst)
     return size
 
 
-
 def get(lst, idx):
     """ return the value at index idx"""
-    assert  isEmpty(lst), 'linked list is empty!'
+    assert is_empty(lst), 'linked list is empty!'
     assert idx in range(length(lst)), 'linked list index out of range'
+    # range(length(lst)) will be executed once and only once
+    # although lst is rebound later to its next
     for i in range(length(lst)):
         if i == idx:
             val = value(lst)
@@ -55,29 +56,36 @@ def get(lst, idx):
     return val
 
 
-def setItem(lst, idx):
-    """ setItem sets the lst value at idx"""
+def set(lst, idx, val):
+    """ resets the value at idx"""
     # the design behind this function is to think about
     # how would you change a linked list inplace, or build and return
     # new linked list
-    pass
+    assert idx in range(length(lst)),"linked list index out of range"
+    for i in range(length(lst)):
+        if idx == i:
+            lst[0] = val
+            break
+        lst = next(lst)
+    return None
 
 
-def index(val):
+def index(lst, val):
     """return first index of value"""
-    pass
-
-
-def insert(idx, obj):
-    """insert obj before idx"""
+    for i in range(length(lst)):
+        if val == value(lst):
+            return i
+        lst = next(lst)
+    return None
 
 
 def _extreme(lst):
-    assert not isEmpty(lst), "linked list is empty!"
+    """ a helper function returns (min, max)"""
+    assert not is_empty(lst), "linked list is empty!"
     mini = value(lst)
     maxi = value(lst)
     cur = next(lst)
-    while not isEmpty(cur):
+    while not is_empty(cur):
         if value(cur) < mini:
             mini = value(cur)
         if value(cur) > maxi:
@@ -94,10 +102,12 @@ def reverse(lst):
 
 
 def minimum(lst):
+    """return the minimum value"""
     return _extreme(lst)[0]
 
 
 def maximum(lst):
+    """ return the maximum value"""
     return _extreme(lst)[1]
 
 
@@ -106,12 +116,13 @@ def flatten(lst):
         reduce the nested linked list to flat list
     """
     assert is_linked_list(lst), "parameter is not a linked list"
-    if isEmpty(lst):
+    if is_empty(lst):
         return []
     return [value(lst)] + flatten(next(lst))
 
 
 def linked_list_from_list(lst):
+    """ constructs a linked list from a regular list"""
     assert type(lst) == list, "parameter is not a list"
     if not lst:       # lst == []
         return []
@@ -119,8 +130,9 @@ def linked_list_from_list(lst):
 
 
 def apply_to_all(f, lst):
+    """ apply f to every element in lst"""
     assert is_linked_list(lst), "second parameter is not a linked list"
-    if isEmpty(lst):
+    if is_empty(lst):
         return lst
     else:
         new_value = f(value(lst))
@@ -129,8 +141,9 @@ def apply_to_all(f, lst):
 
 
 def keep_if(f, lst):
+    """ keeps all the elements in lst which makes f(x) ==  True"""
     assert is_linked_list(lst), "second parameter is not a linked list"
-    if isEmpty(lst):
+    if is_empty(lst):
         return lst
     else:
         if not f(value(lst)):
@@ -142,13 +155,14 @@ def keep_if(f, lst):
 
 
 def is_linked_list(lst):
+    """returns True if lst is a linked list"""
     if type(lst) != list or not len(lst) in (0, 2):
         return False
 
     if len(lst) == 0:  # base case [x,[]]
         return True
     else:
-        return is_linked_list(lst[1])   #
+        return is_linked_list(lst[1])   # lst[1] is different from lst[1:]
 
 
 def minimum_test():
@@ -160,16 +174,12 @@ def maximum_test():
     lst = linked_list(-12, linked_list(33, linked_list(900, linked_list(-2))))
     assert maximum(lst) == 900, "maximum function failed"
 
+
 def is_linked_list_test():
     lst = []
     assert is_linked_list(lst),"is_linked_list failed"
     lst = linked_list(3,[])
     assert is_linked_list(lst),"is_linked_list failed"
-
-def
-
-
-
 
 
 def linked_list_test():
