@@ -125,12 +125,31 @@ def pizza_distributor(tpl):
 
 
 def pizza_distributor_test():
-    a = (2, 4, 6, 1, 8, 9, 10)
+    a = (2, 4, 6, 1, 8, 9, 10, 7, 15, 8)
     Alice, Bob = pizza_distributor(a)
     print("Alice got: ", Alice)
     print("Bob   got: ", Bob)
-    assert sum(Alice) == 20, "pizza_divider_test failed"
+    assert sum(Alice) == 35, "pizza_divider_test failed"
 
+
+def stair(num):
+    """return number of ways to walk n steps, if you can choose to take 1 or 2
+    steps at a time"""
+    if num <= 2:
+        return num
+    if num == 3:
+        return 4
+    else:
+        return stair(num-1)+stair(num-2)+stair(num-3)
+
+
+def stair_test():
+    a = stair(5)
+    b = stair(10)
+    print("{} ways to climb 5 steps of stair, one or two steps at a time".format(a))
+    print("{} ways to climb 10 steps of stair, one or two steps at a time".format(b))
+    assert a == 13, "stair_test failed"
+    assert b == 274, "stair_test failed"
 
 if __name__ == "__main__":
     replace_with_sum_test()
@@ -138,4 +157,5 @@ if __name__ == "__main__":
     reverse_test()
     permutation_test()
     pizza_distributor_test()
+    stair_test()
 
