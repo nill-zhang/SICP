@@ -1,6 +1,5 @@
 import copy
 
-
 def replace_with_sum(lst1):
     """replaces each element of a list with the sum of the
        two largest numbers after it. Use -1 if there are not enough numbers"""
@@ -151,6 +150,39 @@ def stair_test():
     assert a == 13, "stair_test failed"
     assert b == 274, "stair_test failed"
 
+
+def stair_ksteps(num, k):
+    """gives the number of ways to climb n steps, at each step,
+       you can choose to take 1, 2, ... k-2, k-1 or k steps"""
+
+    def base(k):
+        """returns how to climb k steps using up to k steps"""
+        # two base case,
+        # 0 is taking one k-steps to climb k steps, only one way
+        # 1 is taking one step at a time to climb k steps, only one way
+        if k in (0, 1):
+            return 1
+        else:
+            # base(1)+base(2)+base(3)+...base(k-1)+base(0)
+            sum_base = sum([base(i) for i in range(k)])
+            return sum_base
+    if num <= k:
+        return base(num)
+    else:
+        sum_stair = sum([stair_ksteps(num-i, k) for i in range(1, k+1)])
+        return sum_stair
+
+
+def stair_ksteps_test():
+    a = stair_ksteps(5, 2)
+    b = stair_ksteps(5, 5)
+    c = stair_ksteps(10, 5)
+    print(a, b, c)
+    assert a == 8, "stair_ksteps_test failed"
+    assert b == 16, "stair_ksteps_test failed"
+    assert c == 464, "stair_ksteps_test failed"
+
+
 if __name__ == "__main__":
     replace_with_sum_test()
     matrix_product_test()
@@ -158,4 +190,5 @@ if __name__ == "__main__":
     permutation_test()
     pizza_distributor_test()
     stair_test()
+    stair_ksteps_test()
 
