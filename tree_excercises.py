@@ -11,7 +11,6 @@ def depth_first_using_stack(t):
     stack = []
     traversed_values = []
     while t:
-        print(t.value)
         traversed_values.append(t.value)
         if t.children:
             if len(t.children) > 1:
@@ -30,23 +29,52 @@ def depth_first_using_stack(t):
                 t = stack.pop()
 
 
-def depth_first_using_stack_test():
-    # a visualization of the tree
-    #            1
-    #          / |\\
-    #         2  3 45
-    #        / \
-    #       6   7
-    #      /
-    #     8
-    #    /
-    #   9
-    tree = Tree(1, [Tree(2, [Tree(6, [Tree(8, [Tree(9)])]), Tree(7)]), Tree(3), Tree(4), Tree(5)])
+def depth_first_using_stack_test(tree):
     values = depth_first_using_stack(tree)
     assert values == [1, 2, 6, 8, 9, 7, 3, 4, 5], "depth_first test failed"
 
 
-def breadth_first_using_stack(t):
+def dfs_using_stack(t):
+    trees = [t]
+    traversed_values = []
+    while trees:
+        t = trees.pop()
+        traversed_values.append(t.value)
+        # if it has children, push all the children
+        # to the stack. the first children on the top of stack
+        # it is traversed next after the current parent node
+        for child in t.children[::-1]:
+            trees.append(child)
+    return traversed_values
+
+
+def dfs_using_stack_test(tree):
+    values = dfs_using_stack(tree)
+    print("dfs:", values)
+    assert values == [1, 2, 6, 8, 9, 7, 3, 4, 5], "dfs_test failed"
+
+
+def bfs_using_queue(t):
+    trees = [t]
+    traversed_values = []
+    while trees:
+        t = trees.pop(0)
+        traversed_values.append(t.value)
+        # breadth-first traverse level by level, left to right.
+        # if a node has children, put all the children to
+        # the end of the queue, they will be traversed after
+        # the current parent node's siblings
+        trees.extend(t.children)
+    return traversed_values
+
+
+def bfs_using_queue_test(tree):
+    values = bfs_using_queue(tree)
+    print("bfs:", values)
+    assert values == [1, 2, 3, 4, 5, 6, 7, 8, 9], "bfs_test failed"
+
+
+def in_order_using_stack(t):
     """ traverses the tree breadth_first"""
     # using a list as a stack, list method append as push, pop as pop, respectively
     stack = []
@@ -68,7 +96,6 @@ def breadth_first_using_stack(t):
                 t = stack.pop()
                 # if t is a parent node
                 if t is not None:
-                    print(t.value)
                     traversed_values.append(t.value)
                 # pop up other children of the parent node
                 other_children = stack.pop()
@@ -87,23 +114,18 @@ def breadth_first_using_stack(t):
     return traversed_values
 
 
-def breadth_first_using_stack_test():
-    tree = Tree(1, [Tree(2, [Tree(6, [Tree(8, [Tree(9)])]), Tree(7)]), Tree(3), Tree(4), Tree(5)])
-    values = breadth_first_using_stack(tree)
-    assert values == [9, 8, 6, 2, 7, 1, 3, 4, 5], "breadth_first test failed"
+def in_order_using_stack_test(tree):
+    values = in_order_using_stack(tree)
+    assert values == [9, 8, 6, 2, 7, 1, 3, 4, 5], "in_oder test failed"
 
 
 def pre_order(t, traversed_values=[]):
     traversed_values.append(t.value)
-    if t.children:
-        pre_order(t.children[0], traversed_values)
-        if len(t.children) > 1:
-            for child in t.children[1:]:
-                pre_order(child, traversed_values)
+    for child in t.children:
+        pre_order(child, traversed_values)
 
 
-def pre_order_test():
-    tree = Tree(1, [Tree(2, [Tree(6, [Tree(8, [Tree(9)])]), Tree(7)]), Tree(3), Tree(4), Tree(5)])
+def pre_order_test(tree):
     a = []
     pre_order(tree, a)
     assert a == [1, 2, 6, 8, 9, 7, 3, 4, 5], "pre_order test failed"
@@ -113,38 +135,61 @@ def in_order(t, traversed_values=[]):
     if t.children:
         in_order(t.children[0], traversed_values)
     traversed_values.append(t.value)
-    if len(t.children) > 1:
-        for child in t.children[1:]:
+    # even if t.children == [], t.children[1:] is []
+    # it will not raise an index out of range Error
+    for child in t.children[1:]:
             in_order(child, traversed_values)
 
 
-def in_order_test():
-    tree = Tree(1, [Tree(2, [Tree(6, [Tree(8, [Tree(9)])]), Tree(7)]), Tree(3), Tree(4), Tree(5)])
+def in_order_test(tree):
     a = []
     in_order(tree, a)
     assert a == [9, 8, 6, 2, 7, 1, 3, 4, 5], "in_order failed"
 
 
 def post_order(t, traversed_values=[]):
-    if t.children:
-        post_order(t.children[0],traversed_values)
-        if len(t.children) > 1:
-            for child in t.children[1:]:
-                post_order(child, traversed_values)
+    for child in t.children:
+        post_order_test(child)
+
+    # the following code is ugly compared to the above two lines
+
+    # if t.children:
+    #     post_order(t.children[0],traversed_values)
+    #     if len(t.children) > 1:
+    #         for child in t.children[1:]:
+    #             post_order(child, traversed_values)
     traversed_values.append(t.value)
 
 
-def post_order_test():
-    tree = Tree(1, [Tree(2, [Tree(6, [Tree(8, [Tree(9)])]), Tree(7)]), Tree(3), Tree(4), Tree(5)])
+def post_order_test(tree):
     a = []
     post_order(tree, a)
     assert a == [9, 8, 6, 7, 2, 3, 4, 5, 1], "post_order failed"
 
 
+
+def run_tests():
+    # a visualization of the testing_tree
+    #            1
+    #          / |\\
+    #         2  3 45
+    #        / \
+    #       6   7
+    #      /
+    #     8
+    #    /
+    #   9
+    testing_tree = Tree(1, [Tree(2, [Tree(6, [Tree(8, [Tree(9)])]), Tree(7)]), Tree(3), Tree(4), Tree(5)])
+
+    depth_first_using_stack_test(testing_tree)
+    in_order_using_stack_test(testing_tree)
+    pre_order_test(testing_tree)
+    in_order_test(testing_tree)
+    post_order_test(testing_tree)
+    dfs_using_stack_test(testing_tree)
+    bfs_using_queue_test(testing_tree)
+
+
 if __name__ == "__main__":
-    depth_first_using_stack_test()
-    breadth_first_using_stack_test()
-    pre_order_test()
-    in_order_test()
-    post_order_test()
+    run_tests()
 
